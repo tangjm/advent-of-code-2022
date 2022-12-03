@@ -12,12 +12,12 @@ def read(file):
 
 def partOne():
     records = read(file)
-    score = [ (pair[1] + 1) + ((((pair[1] - pair[0]) % 3 + 1) % 3) * 3) for pair in records ]
+    score = sum([ (pair[1] + 1) + ((((pair[1] - pair[0]) % 3 + 1) % 3) * 3) for pair in records ])
     print(score)
 
 def partTwo():
     records = read(file) 
-    score = [ (((((pair[1] - 1) % 3) + pair[0]) % 3) + 1) + (((pair[1] - 1) % 3) * 3) for pair in records ]
+    score = sum([ (((((pair[1] - 1) % 3) + pair[0]) % 3) + 1) + (((((pair[1] - 1) % 3) + 1) % 3) * 3) for pair in records ])
     print(score)
 
 if __name__ == '__main__':
