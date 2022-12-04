@@ -21,11 +21,13 @@ def readInput(file):
 
 
 def partOne(pairs):
-    return sum([ 1 for pair in pairs if isSubset(pair[0], pair[1]) or isSubset(pair[1], pair[0]) ])
+    # return sum([ 1 for pair in pairs if isSubset(pair[0], pair[1]) or isSubset(pair[1], pair[0]) ])
+    return sum([ isSubset(pair[0], pair[1]) or isSubset(pair[1], pair[0]) for pair in pairs ])
 
 
 def partTwo(pairs):
-    return sum([ 1 for pair in pairs if overlapsWith(pair[0], pair[1]) ])
+    # return sum([ 1 for pair in pairs if overlapsWith(pair[0], pair[1]) ])
+    return sum([ overlapsWith(pair[0], pair[1]) for pair in pairs ])
 
 if __name__ == '__main__':
     data = readInput(file)
