@@ -29,8 +29,8 @@ def partTwo(pairs):
 
 if __name__ == '__main__':
     data = readInput(file)
-    p1 = partOne()
-    p2 = partTwo()
+    p1 = partOne(data)
+    p2 = partTwo(data)
     print(p1)
     print(p2)
 
