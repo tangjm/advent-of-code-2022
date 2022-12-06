@@ -14,7 +14,7 @@ def part_one():
     The order of growth of number of steps is kn
     where k is the window size and n is the number of characters.
 
-    In Python we don't need to worry about the index being out of bounds.
+    In Python we don't need to worry about the slice end index being out of bounds.
     """
     s = read_input(file)
     print('input length', len(s))
