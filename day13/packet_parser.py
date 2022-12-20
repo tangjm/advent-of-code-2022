@@ -1,12 +1,10 @@
 #!/usr/bin/python3
-import re
 
 def parse_packet(packet):
   """
   Parse nested integer lists like this one
   [1,[2,[3,[4,[5,6,7]]]],8,9]
   """
-  # print('packet', packet)
   parse_result = None
   stack = []
 
@@ -25,19 +23,16 @@ def parse_packet(packet):
       else:
         parse_result = top
 
-    # This is hack that only works because all integers < 10. 
-    # We should really use a parser, but this works for now.
-    elif packet[i] == '1' and packet[i + 1] == '0':
+    elif packet[i] in '0123456789':
+      current_num = '' 
+      while packet[i] in '0123456789':
+        current_num += packet[i]
+        i += 1
       top = stack.pop()
-      top.append(10)
+      top.append(int(current_num))
       stack.append(top)
-      i += 1
+      i -= 1
 
-    elif re.match('\d', packet[i]):
-      top = stack.pop()
-      top.append(int(packet[i]))
-      stack.append(top)
-    
     i += 1
 
   print('parse result', parse_result)
@@ -46,4 +41,8 @@ def parse_packet(packet):
 
 if __name__ == '__main__':
   packet = '[1,[2,[3,[4,[5,6,7]]]],8,9]'
+  empty_lists = '[[],[[],[[9]]],[]]'
+  large_ints = '[[], [23, [[45]], 69], [234, [1222]]]'
   parse_packet(packet)
+  parse_packet(empty_lists)
+  parse_packet(large_ints)
