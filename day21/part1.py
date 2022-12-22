@@ -1,34 +1,25 @@
 #!/usr/bin/python3
 import sys
 import re
-import math
-from typing import *
-from logger import log
-from collections import deque
-import helpers
 from schemas import Expression, Monkey, Constant
+import parser 
 
 filename = './puzzle_input.txt' if len(sys.argv) < 2 else sys.argv[1]
 
+monkey_to_job = parser.parse_file(filename)
 
-with open(filename, 'rt') as f:
-    lines = f.read().rstrip().split('\n')
-    split = list(map(lambda x:x.split(': '), lines))
-
-    monkeys = [ monkey for monkey, job in split ]
-    jobs = [ job for monkey, job in split]
-
-    parsed_jobs = list(map(helpers.parse_job, jobs))
-
-    zipped = list(zip(monkeys, parsed_jobs))
-    log('zipped', zipped)
-
-    monkey_to_job = dict(zipped) 
-    log('mapping', monkey_to_job)
-
+operators = {
+    '+': lambda a, b: a + b, 
+    '-': lambda a, b: a - b,
+    '/': lambda a, b: a // b,
+    '*': lambda a, b: a * b
+}
 
 def make_tree(root): 
-    """Construct tree from preorder traversal"""
+    """
+    Construct tree from preorder traversal.
+    The resulting tree will comprise only Expressions and Constants.
+    """
     if isinstance(root, Expression):
         root.left = make_tree(root.left)
         root.right = make_tree(root.right)
@@ -43,21 +34,16 @@ def make_tree(root):
 
     return root
 
-operators = {
-    '+': lambda a, b: a + b, 
-    '-': lambda a, b: a - b,
-    '/': lambda a, b: a // b,
-    '*': lambda a, b: a * b
-}
-
-def evaluate_expression(root): 
+def evaluate_expression(root, operators): 
     """
     Evaluate expression by using a postorder traversal
     that propogates intermediate results up to the tree root.
+
+    Expects a tree as an argument that comprises Expressions and Constants only.
     """
     if isinstance(root, Expression): 
-        right = evaluate_expression(root.right)
-        left = evaluate_expression(root.left)
+        right = evaluate_expression(root.right, operators)
+        left = evaluate_expression(root.left, operators)
         return operators[root.op](left, right)
     
     if isinstance(root, Constant): 
@@ -65,25 +51,12 @@ def evaluate_expression(root):
 
 
 def part_one():
-    # Build our tree 
     root_monkey = monkey_to_job['root']
-    print(root_monkey)
-
     tree = make_tree(root_monkey)
-    result = evaluate_expression(tree)
-    print(tree)
+    result = evaluate_expression(tree, operators)
+
+    print('syntax tree\n', tree)
     print('Part One:', result)
 
-
-
-
-    
-
-
-if __name__ == '__main__':
+if __name__ == '__main__': 
     part_one()
-
-
-
-
-
